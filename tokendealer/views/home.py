@@ -24,9 +24,12 @@ def _root():
 @home.route('/create_token', methods=['POST'])
 def create_token():
     key = current_app.config['priv_key']
-    data = request.json
-    token = jwt.encode(data, key, algorithm='RS512')
-    return {'token': token.decode('utf8')}
+    try:
+        data = request.json
+        token = jwt.encode(data, key, algorithm='RS512')
+        return {'token': token.decode('utf8')}
+    except Exception as e:
+        return _400(str(e))
 
 
 @home.route('/verify_token', methods=['POST'])

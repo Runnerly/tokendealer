@@ -24,6 +24,11 @@ class TestSomething(unittest.TestCase):
                                   headers=self.headers)
         self.assertTrue(resp.json['this'], 'token')
 
+    def test_bad_creation(self):
+        data = ''
+        self.app.post_json('/create_token', params=data,
+                           headers=self.headers, status=400)
+
     def test_bad_tokens(self):
         resp = self.app.post_json('/verify_token', params={'token': 'd.A.D'},
                                   headers=self.headers, status=400)

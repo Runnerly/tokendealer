@@ -1,4 +1,4 @@
-from myservice.views.home import home
+from .home import home
 
 
 blueprints = [home]

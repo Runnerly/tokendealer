@@ -1,9 +1,19 @@
 from flask import request, current_app
+from werkzeug.exceptions import HTTPException
 from flakon import JsonBlueprint
+from flakon.util import error_handling
+
 import jwt
 
 
 home = JsonBlueprint('home', __name__)
+
+
+def _400(desc):
+    exc = HTTPException()
+    exc.code = 400
+    exc.description = desc
+    return error_handling(exc)
 
 
 @home.route('/')
@@ -22,5 +32,8 @@ def create_token():
 @home.route('/verify_token', methods=['POST'])
 def verify_token():
     key = current_app.config['pub_key']
-    token = request.json['token']
-    return jwt.decode(token, key)
+    try:
+        token = request.json['token']
+        return jwt.decode(token, key)
+    except Exception as e:
+        return _400(str(e))

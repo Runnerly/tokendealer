@@ -2,7 +2,7 @@ APIS
 ====
 
 
-**myservice** includes one view that's linked to the root path:
+**TokenDealer** has three views:
 
 .. autofunction:: tokendealer.views.home._root
 

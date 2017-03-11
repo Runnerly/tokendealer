@@ -10,30 +10,41 @@ from tokendealer.app import app         # NOQA
 class TestSomething(unittest.TestCase):
     def setUp(self):
         self.app = _TestApp(app)
-        self.headers = {'Content-Type': 'application/vnd.api+json'}
+        self.headers = {'Content-Type': 'application/x-www-form-urlencoded'}
 
     def test_get_pub_key(self):
-        resp = self.app.get('/')
-        self.assertTrue('pub_key' in resp.json)
+        resp = self.app.get('/.well-known/jwks.json')
+        self.assertTrue('n' in resp.json[0])
 
     def test_roundtrip(self):
-        data = {'this': 'token'}
-        resp = self.app.post_json('/create_token', params=data,
-                                  headers=self.headers)
-        resp = self.app.post_json('/verify_token', params=resp.json,
-                                  headers=self.headers)
-        self.assertTrue(resp.json['this'], 'token')
+        data = [('client_id', 'cid'),
+                ('client_secret', 'csecret'),
+                ('audience', 'audience'),
+                ('grant_type', 'client_credentials')]
+
+        resp = self.app.post('/oauth/token', params=data,
+                             headers=self.headers)
+
+        data = resp.json
+        data['audience'] = 'audience'
+        resp = self.app.post_json('/verify_token', params=data)
+        self.assertEqual(resp.json['iss'], 'runnerly-tokendealer')
 
     def test_bad_creation(self):
-        data = ''
-        self.app.post_json('/create_token', params=data,
-                           headers=self.headers, status=400)
+        data = [('client_id', 'cid'),
+                ('client_secret', 'csecret'),
+                ('audience', 'audience'),
+                ('grant_type', 'wat')]
+
+        self.app.post('/oauth/token', params=data,
+                      headers=self.headers, status=400)
 
     def test_bad_tokens(self):
-        resp = self.app.post_json('/verify_token', params={'token': 'd.A.D'},
-                                  headers=self.headers, status=400)
+        resp = self.app.post_json('/verify_token',
+                                  params={'access_token': 'd.A.D'},
+                                  status=400)
         self.assertEqual(resp.json['description'], 'Invalid header padding')
 
         resp = self.app.post_json('/verify_token', params={},
-                                  headers=self.headers, status=400)
-        self.assertEqual(resp.json['description'], "'token'")
+                                  status=400)
+        self.assertEqual(resp.json['description'], "'access_token'")

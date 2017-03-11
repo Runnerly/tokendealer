@@ -4,7 +4,7 @@ APIS
 
 **TokenDealer** has three views:
 
-.. autofunction:: tokendealer.views.home._root
+.. autofunction:: tokendealer.views.home._jwks
 
 .. autofunction:: tokendealer.views.home.create_token
 

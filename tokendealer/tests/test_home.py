@@ -6,6 +6,8 @@ os.environ['TESTDIR'] = os.path.dirname(__file__)
 
 from tokendealer.app import app         # NOQA
 
+_SECRET = 'f0fdeb1f1584fd5431c4250b2e859457'
+
 
 class TestSomething(unittest.TestCase):
     def setUp(self):
@@ -17,8 +19,8 @@ class TestSomething(unittest.TestCase):
         self.assertTrue('n' in resp.json[0])
 
     def test_roundtrip(self):
-        data = [('client_id', 'cid'),
-                ('client_secret', 'csecret'),
+        data = [('client_id', 'strava'),
+                ('client_secret', _SECRET),
                 ('audience', 'audience'),
                 ('grant_type', 'client_credentials')]
 
@@ -31,8 +33,8 @@ class TestSomething(unittest.TestCase):
         self.assertEqual(resp.json['iss'], 'runnerly-tokendealer')
 
     def test_bad_creation(self):
-        data = [('client_id', 'cid'),
-                ('client_secret', 'csecret'),
+        data = [('client_id', 'strava'),
+                ('client_secret', _SECRET),
                 ('audience', 'audience'),
                 ('grant_type', 'wat')]
 

@@ -30,9 +30,11 @@ def _jwks():
     return jsonify([key])
 
 
+_SECRETS = {'strava': 'f0fdeb1f1584fd5431c4250b2e859457'}
+
+
 def is_authorized_app(client_id, client_secret):
-    # XXX verify credentials.
-    return True
+    return _SECRETS.get(client_id) == client_secret
 
 
 @home.route('/oauth/token', methods=['POST'])

@@ -52,9 +52,12 @@ def create_token():
         if not is_authorized_app(client_id, client_secret):
             return abort(401)
 
+        now = int(time.time())
+
         token = {'iss': 'runnerly-tokendealer',
                  'aud': aud,
-                 'iat': int(time.time())}
+                 'iat': now,
+                 'exp': now + 3600 * 24}
         token = jwt.encode(token, key, algorithm='RS512')
         return {'access_token': token.decode('utf8')}
     except Exception as e:

@@ -1,11 +1,13 @@
 FROM python:3.6
 
 RUN pip install circus chaussette
-RUN apt-get -y update
-RUN apt-get -y install libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make wget
-RUN wget https://openresty.org/download/openresty-1.11.2.3.tar.gz
 
-RUN tar xzvf openresty-1.11.2.3.tar.gz && \
+RUN apt-get -y update && \
+    apt-get -y install libreadline-dev libncurses5-dev && \
+    apt-get -y install libpcre3-dev libssl-dev perl make
+
+RUN curl -sSL https://openresty.org/download/openresty-1.11.2.3.tar.gz \
+    | tar -xz && \
     cd openresty-1.11.2.3 && \
     ./configure -j2 && \
     make -j2 && \

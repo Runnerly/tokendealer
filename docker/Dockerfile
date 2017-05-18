@@ -17,10 +17,17 @@ ENV PATH "/usr/local/openresty/bin:/usr/local/openresty/nginx/sbin:$PATH"
 
 COPY docker/circus.ini /app/circus.ini
 COPY docker/nginx.conf /app/nginx.conf
+COPY docker/settings.ini /app/settings.ini
+COPY docker/pubkey.pem /app/pubkey.pem
+COPY docker/privkey.pem /app/privkey.pem
+
 COPY . /app
 
 RUN pip install -r /app/requirements.txt
 RUN pip install /app/
+
+RUN mkdir /logs
+VOLUME /logs
 
 EXPOSE 8080
 CMD circusd /app/circus.ini

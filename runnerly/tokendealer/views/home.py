@@ -54,7 +54,7 @@ def create_token():
 
         now = int(time.time())
 
-        token = {'iss': 'runnerly-tokendealer',
+        token = {'iss': 'https://tokendealer.example.com',
                  'aud': aud,
                  'iat': now,
                  'exp': now + 3600 * 24}

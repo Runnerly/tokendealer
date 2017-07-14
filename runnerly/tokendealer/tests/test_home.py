@@ -30,7 +30,7 @@ class TestSomething(unittest.TestCase):
         data = resp.json
         data['audience'] = 'audience'
         resp = self.app.post_json('/verify_token', params=data)
-        self.assertEqual(resp.json['iss'], 'runnerly-tokendealer')
+        self.assertEqual(resp.json['iss'], 'https://tokendealer.example.com')
 
     def test_bad_creation(self):
         data = [('client_id', 'strava'),

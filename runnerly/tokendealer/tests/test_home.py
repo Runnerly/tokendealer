@@ -4,13 +4,14 @@ from flask_webtest import TestApp as _TestApp
 
 os.environ['TESTDIR'] = os.path.dirname(__file__)
 
-from tokendealer.app import app         # NOQA
+from runnerly.tokendealer.app import create_app     # NOQA
 
 _SECRET = 'f0fdeb1f1584fd5431c4250b2e859457'
 
 
 class TestSomething(unittest.TestCase):
     def setUp(self):
+        app = create_app()
         self.app = _TestApp(app)
         self.headers = {'Content-Type': 'application/x-www-form-urlencoded'}
 

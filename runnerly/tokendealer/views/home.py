@@ -1,4 +1,5 @@
 import time
+from hmac import compare_digest
 from flask import request, current_app, abort, jsonify
 from werkzeug.exceptions import HTTPException
 from flakon import JsonBlueprint
@@ -34,7 +35,7 @@ _SECRETS = {'strava': 'f0fdeb1f1584fd5431c4250b2e859457'}
 
 
 def is_authorized_app(client_id, client_secret):
-    return _SECRETS.get(client_id) == client_secret
+    return compare_digest(_SECRETS.get(client_id), client_secret)
 
 
 @home.route('/oauth/token', methods=['POST'])
